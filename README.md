@@ -10,7 +10,7 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s  - %(levelname)s - %(message)s')
 tu = TraceUtil("password", "pw")
-log = logging.getLogger(\_\_name\_\_)
+log = logging.getLogger(__name__)
 
 @tu.trace(log)
 def login(user, pw, username=None, password=None):
