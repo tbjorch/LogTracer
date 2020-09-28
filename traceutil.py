@@ -57,6 +57,9 @@ class TraceUtil():
     def __create_arg_log_string(self, arg_obj, *args) -> str:
         arg_list = list(args)
         for i, arg in enumerate(arg_obj.args):
+            if (arg_obj.defaults is not None) \
+                    and (i >= len(arg_obj.defaults) - 1):
+                break
             if arg in self.excluded_args:
                 arg_list[i] = "**********"
         return f"args={arg_list}"
