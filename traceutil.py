@@ -49,7 +49,7 @@ class TraceUtil():
                 log.debug(
                     f"Executing function {function.__name__} with "
                     f"{self.__create_arg_log_string(arg_obj, *args, **kwargs)}"
-                    f" and {self.__create_kwarg_log_string(arg_obj, **kwargs)}"
+                    f" and {self.__create_kwarg_log_string(**kwargs)}"
                     )
                 return function(*args, **kwargs)
             return inner_wrapper
@@ -69,14 +69,8 @@ class TraceUtil():
                 arg_list[i] = "**********"
         return f"args={arg_list}"
 
-    def __create_kwarg_log_string(self, arg_obj, **kwargs) -> str:
-        if (arg_obj.defaults is not None) \
-                and (len(kwargs) == len(arg_obj.defaults)):
-            for arg in arg_obj.args:
-                if arg in self.excluded_args:
-                    kwargs[arg] = "**********"
-            return f"kwargs={kwargs}"
-        for kwarg in arg_obj.kwonlyargs:
+    def __create_kwarg_log_string(self, **kwargs) -> str:
+        for kwarg in kwargs:
             if kwarg in self.excluded_args:
                 kwargs[kwarg] = "**********"
         return f"kwargs={kwargs}"
