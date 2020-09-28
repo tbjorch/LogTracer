@@ -47,25 +47,36 @@ class TraceUtil():
             def inner_wrapper(*args, **kwargs):
                 arg_obj = inspect.getfullargspec(function)
                 log.debug(
-                    f"Executing function {function.__name__} with"
-                    f" {self.__create_arg_log_string(arg_obj, *args)} and"
-                    f" {self.__create_kwarg_log_string(arg_obj, **kwargs)}")
+                    f"Executing function {function.__name__} with "
+                    f"{self.__create_arg_log_string(arg_obj, *args, **kwargs)}"
+                    f" and {self.__create_kwarg_log_string(arg_obj, **kwargs)}"
+                    )
                 return function(*args, **kwargs)
             return inner_wrapper
         return wrapper
 
-    def __create_arg_log_string(self, arg_obj, *args) -> str:
+    def __create_arg_log_string(self, arg_obj, *args, **kwargs) -> str:
+        if arg_obj.defaults is not None \
+                and len(arg_obj.args) == len(arg_obj.defaults) \
+                and len(args) == 0:
+            return "args=[]"
         arg_list = list(args)
         for i, arg in enumerate(arg_obj.args):
             if (arg_obj.defaults is not None) \
-                    and (i >= len(arg_obj.defaults) - 1):
+                    and (i > len(arg_obj.defaults)-1):
                 break
             if arg in self.excluded_args:
                 arg_list[i] = "**********"
         return f"args={arg_list}"
 
     def __create_kwarg_log_string(self, arg_obj, **kwargs) -> str:
-        for i, kwarg in enumerate(arg_obj.kwonlyargs):
+        if (arg_obj.defaults is not None) \
+                and (len(kwargs) == len(arg_obj.defaults)):
+            for arg in arg_obj.args:
+                if arg in self.excluded_args:
+                    kwargs[arg] = "**********"
+            return f"kwargs={kwargs}"
+        for kwarg in arg_obj.kwonlyargs:
             if kwarg in self.excluded_args:
                 kwargs[kwarg] = "**********"
         return f"kwargs={kwargs}"
