@@ -5,8 +5,9 @@ Log utility allowing detailed tracing of function execution while at the same ti
 TraceUtil provides a decorator allowing detailed output of function execution to facilitate tracing, while at the same time allowing masking of arguments by argument name. On creation, the provided arguments to TraceUtil will create a list of argument names that will be masked in the log.
 
 ## Example implementation:
-```
+```Python
 import logging
+from traceutil import TraceUtil
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s  - %(levelname)s - %(message)s')
 tu = TraceUtil("password", "pw")
