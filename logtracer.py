@@ -56,7 +56,7 @@ class LogTracer():
         # Iterating through positional arguments and breaking when/if we
         # reach default arguments, found in the kwarg parameter.
         for i, arg in enumerate(arg_obj.args):
-            if i > len(arg_list):
+            if i >= len(arg_list):
                 break
             if arg in self.masked_args:
                 arg_list[i] = "**********"
