@@ -1,19 +1,19 @@
-# TraceUtil
+# LogTracer
 Log utility allowing detailed tracing of function execution while at the same time masking arguments by name
 
 ## Description
-TraceUtil provides a decorator allowing detailed output of function execution to facilitate tracing, while at the same time allowing masking of arguments by argument name. On creation, the provided arguments to TraceUtil will create a list of argument names that will be masked in the log.
+LogTracer provides a decorator allowing detailed output of function execution to facilitate tracing, while at the same time allowing masking of arguments by argument name. On creation, the provided arguments to TraceUtil will create a list of argument names that will be masked in the log.
 
 ## Example implementation:
 ```Python
 import logging
-from traceutil import TraceUtil
+from logtracer import LogTracer
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s  - %(levelname)s - %(message)s')
-tu = TraceUtil("password", "pw")
 log = logging.getLogger(__name__)
+tu = LogTracer(log, "password", "pw")
 
-@tu.trace(log)
+@tu.trace()
 def login(user, pw, username=None, password=None):
     #function executing stuff
 
