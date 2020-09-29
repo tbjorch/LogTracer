@@ -10,11 +10,12 @@ class LogTracer():
     execution to facilitate tracing, while at the same time allowing masking
     of arguments by argument name.
 
-    On creation, LogTracer takes varargs of argument names to be masked
+    On creation, LogTracer takes a Logger object from the module where it is
+    instantiated, and varargs of argument names to be masked.
 
     Example ----------------------------------------------------------------
-    lt = LogTracer("password", "pw")
     log = logging.getLogger(__name__)
+    lt = LogTracer(log, "password", "pw")
 
     @lt.trace(log)
     def login(user, pw, username=None, password=None):
@@ -26,23 +27,15 @@ class LogTracer():
     the root logger isformatted like
     '%(asctime)s - %(name)s  - %(levelname)s - %(message)s':
 
-    2020-09-28 19:58:31,733 - my_module_name  - DEBUG - Executing function login with args=['Arnold', '**********'] and kwargs={'username': 'pony', 'password': '**********'}
+    2020-09-28 19:58:31,733 - my_module_name  - DEBUG - Executing function
+    login with args=['Arnold', '**********'] and kwargs={'username': 'pony',
+    'password': '**********'}
     """
     def __init__(self, log: Logger, *masked_args: str):
         self.masked_args = masked_args
         self.log = log
 
     def trace(self) -> Callable:
-        """
-        Decorator method creating trace log.
-
-        Parameters:
-        log - Logger object in order to ensure outputed log conforms to
-              the formatting configured in root
-
-        Returns:
-        Decorated function
-        """
         def wrapper(function):
             @wraps(function)
             def inner_wrapper(*args, **kwargs):
