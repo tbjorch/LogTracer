@@ -11,9 +11,9 @@ from logtracer import LogTracer
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s  - %(levelname)s - %(message)s')
 log = logging.getLogger(__name__)
-tu = LogTracer(log, "password", "pw")
+lt = LogTracer(log, "password", "pw")
 
-@tu.trace()
+@lt.trace()
 def login(user, pw, username=None, password=None):
     #function executing stuff
 
