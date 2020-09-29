@@ -2,7 +2,7 @@
 Log utility allowing detailed tracing of function execution while at the same time masking arguments by name
 
 ## Description
-LogTracer provides a decorator allowing detailed output of function execution to facilitate tracing, while at the same time allowing masking of arguments by argument name. On creation, the provided arguments to TraceUtil will create a list of argument names that will be masked in the log.
+LogTracer provides a decorator method, enabling detailed output of function execution to facilitate tracing, while at the same time allowing masking of arguments by argument name. On creation, the string varargs provided to LogTracer will constitute a list of argument names whos values will be masked in the log.
 
 ## Example implementation:
 ```Python
