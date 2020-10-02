@@ -8,8 +8,8 @@ class TestContext():
     def __init__(self, *masked_args):
         self.log = logging.getLogger(__name__)
         self.stdout = StringIO()
-        self.sh = logging.StreamHandler(self.stdout)
-        self.log.addHandler(self.sh)
+        sh = logging.StreamHandler(self.stdout)
+        self.log.addHandler(sh)
         self.log.setLevel(logging.DEBUG)
         self.lt = LogTracer(self.log, *masked_args)
 
@@ -20,7 +20,7 @@ class TestContext():
         del self
 
 
-def test_1():
+def test_posargs_varargs_varkwargs():
     with TestContext("password") as c:
         @c.lt.trace()
         def my_function1(username, password, *args, **kwargs): pass
@@ -35,7 +35,7 @@ def test_1():
             "kwargs={'mykey1': 'kwarg1', 'mykey2': 'kwarg2'}\n"
 
 
-def test_2():
+def test_varags_defaultkwargs_varkwargs():
     with TestContext("password") as c:
         @c.lt.trace()
         def my_function2(*args, username=None, password=None, **kwargs): pass
@@ -50,7 +50,7 @@ def test_2():
             "'kwarg1'}\n"
 
 
-def test_3():
+def test_posargs_varargs_defaultkwargs_varkwargs():
     with TestContext("password") as c:
         @c.lt.trace()
         def my_function3(
@@ -71,7 +71,7 @@ def test_3():
             " 'pony', 'password': '**********', 'other': 'kwarg'}\n"
 
 
-def test_4():
+def test_posargs_defaultkwargs():
     with TestContext("pw", "password") as c:
         @c.lt.trace()
         def my_function4(user, pw, username=None, password=None): pass
@@ -86,7 +86,7 @@ def test_4():
             "{'username': 'popy', 'password': '**********'}\n"
 
 
-def test_5():
+def test_posargs():
     with TestContext("pw") as c:
         @c.lt.trace()
         def my_function5(user, pw): pass
@@ -99,7 +99,7 @@ def test_5():
             "['Arnold', '**********'] and kwargs={}\n"
 
 
-def test_6():
+def test_defaultkwargs_1():
     with TestContext("password") as c:
         @c.lt.trace()
         def my_function6(username=None, password=None): pass
@@ -112,7 +112,7 @@ def test_6():
             "args=['Arnold', '**********'] and kwargs={}\n"
 
 
-def test_7():
+def test_defaultkwargs_2():
     with TestContext("password") as c:
         @c.lt.trace()
         def my_function6(username=None, password=None): pass
@@ -125,7 +125,7 @@ def test_7():
             "and kwargs={'password': '**********', 'username': 'Bernard'}\n"
 
 
-def test_8():
+def test_defaultkwargs_3():
     with TestContext("password") as c:
         @c.lt.trace()
         def my_function6(username=None, password=None): pass
@@ -138,7 +138,7 @@ def test_8():
             "and kwargs={'username': 'Arnold', 'password': '**********'}\n"
 
 
-def test_9():
+def test_varargs_defaultkwargs_varkwargs():
     with TestContext("password") as c:
         @c.lt.trace()
         def my_function7(*args, password=None, **kwargs): pass
