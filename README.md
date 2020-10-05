@@ -2,7 +2,7 @@
 Log utility allowing detailed tracing of function execution while at the same time masking arguments by name
 
 ## Description
-LogTracer provides a decorator method, enabling detailed output of function execution to facilitate tracing, while at the same time allowing masking of arguments by argument name. On creation, the string varargs provided to LogTracer will constitute a list of argument names whos values will be masked in the log.
+LogTracer provides a decorator method, enabling detailed output of function execution to facilitate tracing, while at the same time allowing masking of arguments by argument name. The trace method will mask the value of arguments with a name matching any of the string arguments provided to the method.
 
 ## Example implementation:
 ```Python
@@ -11,11 +11,11 @@ from logtracer import LogTracer
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s  - %(levelname)s - %(message)s')
 log = logging.getLogger(__name__)
-lt = LogTracer(log, "password", "pw")
+lt = LogTracer(log)
 
-@lt.trace()
+@lt.trace("password", "pw")
 def login(user, pw, username=None, password=None):
-    #function executing stuff
+    pass
 
 login("Arnold", "MyS3cr3tP4ssw0rd!#", username="pony", password="aqew")
 ```

@@ -15,9 +15,9 @@ class LogTracer():
 
     Example ----------------------------------------------------------------
     log = logging.getLogger(__name__)
-    lt = LogTracer(log, "password", "pw")
+    lt = LogTracer(log)
 
-    @lt.trace(log)
+    @lt.trace("password", "pw")
     def login(user, pw, username=None, password=None):
         # function executing stuff
     ------------------------------------------------------------------------
@@ -31,25 +31,25 @@ class LogTracer():
     login with args=['Arnold', '**********'] and kwargs={'username': 'pony',
     'password': '**********'}
     """
-    def __init__(self, log: Logger, *masked_args: str):
-        self.masked_args = masked_args
+    def __init__(self, log: Logger):
         self.log = log
 
-    def trace(self) -> Callable:
+    def trace(self, *masked_args: str) -> Callable:
         def wrapper(function):
             @wraps(function)
             def inner_wrapper(*args, **kwargs):
                 arg_obj = inspect.getfullargspec(function)
                 self.log.debug(
                     f"Executing function {function.__name__} with "
-                    f"{self.__create_arg_log_string(arg_obj, *args, **kwargs)}"
-                    f" and {self.__create_kwarg_log_string(**kwargs)}"
+                    f"{self.__create_arg_log_string(arg_obj, masked_args, *args, **kwargs)}"
+                    f" and {self.__create_kwarg_log_string(masked_args, **kwargs)}"
                     )
                 return function(*args, **kwargs)
             return inner_wrapper
         return wrapper
 
-    def __create_arg_log_string(self, arg_obj, *args, **kwargs) -> str:
+    def __create_arg_log_string(self, arg_obj,
+                                masked_args, *args, **kwargs) -> str:
         if len(args) == 0:
             return "args=[]"
         arg_list = list(args)
@@ -58,12 +58,12 @@ class LogTracer():
         for i, arg in enumerate(arg_obj.args):
             if i >= len(arg_list):
                 break
-            if arg in self.masked_args:
+            if arg in masked_args:
                 arg_list[i] = "**********"
         return f"args={arg_list}"
 
-    def __create_kwarg_log_string(self, **kwargs) -> str:
+    def __create_kwarg_log_string(self, masked_args, **kwargs) -> str:
         for kwarg in kwargs:
-            if kwarg in self.masked_args:
+            if kwarg in masked_args:
                 kwargs[kwarg] = "**********"
         return f"kwargs={kwargs}"
